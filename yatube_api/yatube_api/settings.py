@@ -102,10 +102,10 @@ REST_FRAMEWORK = {
 }
 
 DJOSER = {
-    'LOGIN_FIELD': 'username', 
+    'LOGIN_FIELD': 'username',
     'USER_CREATE_PASSWORD_RETYPE': True,
     'PASSWORD_CHANGED_EMAIL_CONFIRMATION': True,
-    'SEND_ACTIVATION_EMAIL': False, 
+    'SEND_ACTIVATION_EMAIL': False,
     'TOKEN_MODEL': None,
 }
 
