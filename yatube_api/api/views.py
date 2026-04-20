@@ -1,5 +1,7 @@
 from rest_framework import filters, viewsets
 from rest_framework.exceptions import PermissionDenied
+from rest_framework.pagination import LimitOffsetPagination
+from rest_framework.response import Response
 from rest_framework.permissions import (AllowAny, IsAuthenticated,
                                         IsAuthenticatedOrReadOnly)
 from posts.models import Comment, Follow, Group, Post
@@ -12,7 +14,14 @@ class PostViewSet(viewsets.ModelViewSet):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
-    pagination_class = None
+    pagination_class = LimitOffsetPagination
+
+    def list(self, request, *args, **kwargs):
+        if 'limit' in request.query_params or 'offset' in request.query_params:
+            return super().list(request, *args, **kwargs)        
+        queryset = self.filter_queryset(self.get_queryset())
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
